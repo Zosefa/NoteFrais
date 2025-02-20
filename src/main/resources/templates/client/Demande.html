@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" class="form-screen">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/Toast/Toast.min.css">
+    <title>Demande</title>
+
+    <!-- Tailwind is included -->
+    <link rel="stylesheet" href="/dist/css/main.css?v=1628755089081">
+    <style>
+        html{
+            width: 100vw !important;
+        }
+        body{
+            width: 100vw !important;
+        }
+        .card{
+            margin: auto !important;
+
+        }
+    </style>
+</head>
+<body class="h-screen bg-gray-100 flex items-center justify-center">
+
+<div class="card w-full max-w-lg mx-4">
+    <header class="card-header">
+        <p class="card-header-title">
+            <span class="icon"><i class="mdi mdi-lock"></i></span>
+            Envoyer votre demande
+        </p>
+    </header>
+    <div class="card-content">
+        <form action="/envoie" method="POST" enctype="multipart/form-data" th:object="${demandeDTO}" class="space-y-6">
+            <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden" />
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Pair 1: Nom and Prénom -->
+                <div class="field spaced">
+                    <label class="label">Nom</label>
+                    <div class="control icons-left">
+                        <input class="input" type="text" name="nom" id="nom" autocomplete="nom" th:field="${demandeDTO.nom}">
+                        <span class="icon is-small left"><i class="mdi mdi-account"></i></span>
+                    </div>
+                    <p class="help">
+                        Entrer votre nom
+                    </p>
+                </div>
+
+                <div class="field spaced">
+                    <label class="label">Prénom</label>
+                    <div class="control icons-left">
+                        <input class="input" type="text" name="prenom" id="prenom" autocomplete="nom" th:field="${demandeDTO.prenom}">
+                        <span class="icon is-small left"><i class="mdi mdi-account"></i></span>
+                    </div>
+                    <p class="help">
+                        Entrer votre prénom
+                    </p>
+                </div>
+
+                <!-- Pair 2: CIN and Date de Naissance -->
+                <div class="field spaced">
+                    <label class="label">CIN</label>
+                    <div class="control icons-left">
+                        <input class="input" type="text" name="CIN" id="CIN" autocomplete="nom" th:field="${demandeDTO.CIN}">
+                        <span class="icon is-small left"><i class="mdi mdi-account"></i></span>
+                    </div>
+                    <p class="help">
+                        Entrer votre numero CIN
+                    </p>
+                </div>
+
+                <div class="field spaced">
+                    <label class="label">Date de Naissance</label>
+                    <div class="control icons-left">
+                        <input class="input" type="date" name="date" id="date" autocomplete="nom" th:field="${demandeDTO.date}">
+                        <span class="icon is-small left"><i class="mdi mdi-account"></i></span>
+                    </div>
+                    <p class="help">
+                        Entrer votre date de naissance
+                    </p>
+                </div>
+
+                <!-- Pair 3: Téléphone and Adresse -->
+                <div class="field spaced">
+                    <label class="label">Téléphone</label>
+                    <div class="control icons-left">
+                        <input class="input" type="text" name="tel" id="tel" autocomplete="nom" th:field="${demandeDTO.tel}">
+                        <span class="icon is-small left"><i class="mdi mdi-account"></i></span>
+                    </div>
+                    <p class="help">
+                        Entrer votre numero de telephone
+                    </p>
+                </div>
+
+                <div class="field spaced">
+                    <label class="label">Adresse</label>
+                    <div class="control icons-left">
+                        <input class="input" type="text" name="adresse" id="adresse" autocomplete="nom" th:field="${demandeDTO.adresse}">
+                        <span class="icon is-small left"><i class="mdi mdi-account"></i></span>
+                    </div>
+                    <p class="help">
+                        Entrer votre adresse
+                    </p>
+                </div>
+
+                <!-- Pair 4: Email and Image -->
+                <div class="field spaced">
+                    <label class="label">Email</label>
+                    <div class="control icons-left">
+                        <input class="input" type="text" name="email" id="email" autocomplete="nom" th:field="${demandeDTO.email}">
+                        <span class="icon is-small left"><i class="mdi mdi-account"></i></span>
+                    </div>
+                    <p class="help">
+                        Entrer votre Email
+                    </p>
+                </div>
+
+                <div class="field spaced">
+                    <label class="label">Image</label>
+                    <div class="field-body">
+                        <div class="field file">
+                            <label class="upload control">
+                                <a class="button blue">
+                                    Image
+                                </a>
+                                <input type="file" id="image" name="image">
+                            </label>
+                        </div>
+                    </div>
+                    <p class="help">
+                        Importer votre image
+                    </p>
+                </div>
+
+                <!-- Pair 5: Image CIN -->
+                <div class="field spaced">
+                    <label class="label">Image CIN</label>
+                    <div class="field-body">
+                        <div class="field file">
+                            <label class="upload control">
+                                <a class="button blue">
+                                    Image CIN
+                                </a>
+                                <input type="file" id="imageCIN" name="imageCIN">
+                            </label>
+                        </div>
+                    </div>
+                    <p class="help">
+                        Importer votre CIN
+                    </p>
+                </div>
+            </div>
+            <button type="submit" class="button blue">Envoyer</button>
+            <a href="/login">se connecter</a>
+
+        </form>
+    </div>
+</div>
+
+<!-- Scripts below are for demo only -->
+<script type="text/javascript" src="/dist/js/main.min.js?v=1628755089081"></script>
+
+<script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '658339141622648');
+    fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=658339141622648&ev=PageView&noscript=1"/></noscript>
+
+<link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css">
+<script src="/Toast/Toast.min.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    var successMessage = /*[[${success}]]*/ null;
+    var errorMessage = /*[[${erreur}]]*/ null;
+
+    if (successMessage) {
+        Toastify({
+            text: successMessage,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+            stopOnFocus: true,
+        }).showToast();
+    }
+
+    if (errorMessage) {
+        Toastify({
+            text: errorMessage,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+            stopOnFocus: true,
+        }).showToast();
+    }
+
+    /*]]>*/
+</script>
+
+</body>
+</html>

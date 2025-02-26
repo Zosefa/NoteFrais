@@ -31,6 +31,7 @@ public class SecurityConfig {
                         .requestMatchers("/dist/**").permitAll()
                         .requestMatchers("/bootstrap/**").permitAll()
                         .requestMatchers("/test").permitAll()
+                        .requestMatchers("/notificationLue/**").permitAll()
                         .requestMatchers("/dashboard/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/client/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/gestionnaire/**").hasAuthority("ROLE_GESTIONNAIRE")

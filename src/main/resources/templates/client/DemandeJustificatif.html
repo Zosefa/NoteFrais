@@ -27,6 +27,35 @@
         </div>
         <div class="navbar-menu" id="navbar-menu">
             <div class="navbar-end">
+
+                <div class="navbar-item dropdown has-divider has-user-avatar">
+                    <a class="navbar-link">
+        <span class="icon">
+            <i class="mdi mdi-bell"></i>
+            <span class="badge is-danger" th:if="${total > 0}" th:text="${total}" style="position: absolute; top: 1px; right: 12px; background-color: red; color: white; border-radius: 50%; padding: 1px 9px; font-size: 12px;"></span>
+        </span>
+                    </a>
+                    <div class="navbar-dropdown" style="width: 400px; max-height: 400px; overflow-y: auto;">
+                        <div th:if="${notifications.isEmpty()}">
+                            <p class="navbar-item">Aucune notification</p>
+                        </div>
+                        <div th:each="notification : ${notifications}">
+                            <form th:action="@{/notificationLue/{id}(id=${notification.idNotification})}" method="post">
+                                <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden" />
+                                <input type="hidden" name="previousUrl" th:value="${previousUrl}" />
+                                <button type="submit" class="navbar-item" style="background: none; border: none; text-align: left; width: 100%;">
+                                    <span class="icon"><i class="mdi mdi-email"></i></span>
+                                    Votre mission a été
+                                    <span th:if="${notification.etat}">validée</span>
+                                    <span th:if="${!notification.etat}">rejetée</span>
+                                </button>
+                            </form>
+                            <hr class="navbar-divider">
+                        </div>
+                    </div>
+
+                </div>
+
                 <div class="navbar-item dropdown has-divider has-user-avatar">
                     <a class="navbar-link">
                         <div class="user-avatar">

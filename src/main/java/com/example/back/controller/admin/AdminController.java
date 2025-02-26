@@ -5,14 +5,19 @@ import com.example.back.model.*;
 import com.example.back.model.DTO.DemandeFonctionnaireDTO;
 import com.example.back.model.DTO.IndemniteDTO;
 import com.example.back.model.DTO.PosteDTO;
+import com.example.back.model.DTO.ProfilDTO;
 import com.example.back.model.ResultDTO.ResultDemandeFonctionnaireDTO;
 import com.example.back.repository.UserRepository;
 import com.example.back.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +28,8 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/dashboard")
@@ -195,6 +202,52 @@ public class AdminController {
             e.printStackTrace();
         }
         return ("redirect:/dashboard/indemnite");
+    }
+
+
+    @GetMapping("/profil")
+    public String profil(Model model,@AuthenticationPrincipal UserDetails userDetails) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        ProfilDTO profilDTO = new ProfilDTO();
+        profilDTO.setEmail(email);
+        model.addAttribute("email",email);
+        model.addAttribute(profilDTO);
+
+        if (userDetails != null) {
+            Set<String> roles = userDetails.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toSet());
+
+            model.addAttribute("roles", roles);
+        }
+
+        return "admin/page/profile";
+    }
+
+    @PostMapping("/profil")
+    public String profilUpdate(@Valid @ModelAttribute ProfilDTO profilDTO,Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        model.addAttribute("email",email);
+        Users users = userRepository.findByEmail(profilDTO.getEmail());
+        System.out.println(profilDTO.getPassword());
+        if(users != null){
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            if(encoder.matches(profilDTO.getPassword(), users.getPassword())){
+                if(profilDTO.getNewPassword().equals(profilDTO.getConfirm())){
+                    users.setPassword(encoder.encode(profilDTO.getNewPassword()));
+                    userRepository.save(users);
+                    model.addAttribute("profilDTO", new ProfilDTO());
+                    model.addAttribute("success","profil modifier avec success");
+                }else{
+                    model.addAttribute("erreur","veuillez bien confirmer votre mot de passe");
+                }
+            }else{
+                model.addAttribute("erreur","veuillez entrer votre mot de passe");
+            }
+        }
+        return "admin/page/profile";
     }
 
 

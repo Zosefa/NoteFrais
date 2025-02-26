@@ -4,12 +4,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard</title>
+    <title>dashboard</title>
 
+    <!-- Tailwind is included -->
     <link rel="stylesheet" href="/dist/css/main.css?v=1628755089081">
+    <link rel="stylesheet" href="/Toast/Toast.min.css">
 
 </head>
 <body>
+
 <div id="app">
 
     <nav id="navbar-main" class="navbar is-fixed-top">
@@ -35,10 +38,11 @@
                         <span class="icon"><i class="mdi mdi-chevron-down"></i></span>
                     </a>
                     <div class="navbar-dropdown">
-                        <a href="/dashboard/profil" class="navbar-item">
+                        <a href="/client/profil" class="navbar-item">
                             <span class="icon"><i class="mdi mdi-account"></i></span>
                             <span>Profile</span>
                         </a>
+
                         <hr class="navbar-divider">
                         <a class="navbar-item">
                             <form action="/logout" method="post">
@@ -71,7 +75,7 @@
             </ul>
             <p class="menu-label">Examples</p>
             <ul class="menu-list">
-                <li class="--set-active-forms-html">
+                <li class="active">
                     <a href="/dashboard/demande">
                         <span class="icon"><i class="mdi mdi-table"></i></span>
                         <span class="menu-item-label">Demande</span>
@@ -83,7 +87,7 @@
                         <span class="menu-item-label">Demande Accorder</span>
                     </a>
                 </li>
-                <li class="active">
+                <li class="--set-active-profile-html">
                     <a href="/dashboard/demande-refuser">
                         <span class="icon"><i class="mdi mdi-account-circle"></i></span>
                         <span class="menu-item-label">Demande Refuser</span>
@@ -103,7 +107,6 @@
                 </li>
 
             </ul>
-
         </div>
     </aside>
 
@@ -112,41 +115,57 @@
             <header class="card-header">
                 <p class="card-header-title">
                     <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
-                    Liste demande Refuser
+                    Profil Admin
                 </p>
             </header>
             <div class="card-content">
-                <table>
-                    <thead>
-                    <tr>
-                        <th class="image-cell"></th>
-                        <th>Numero Demande</th>
-                        <th>Demandeur</th>
-                        <th>Telephone</th>
-                        <th>Date de refus</th>
-                        <th>Status</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="demande : ${demandes}" class="hover:bg-gray-50">
-                        <td class="image-cell">
-                            <div class="image">
-                                <img src="https://avatars.dicebear.com/v2/initials/rebecca-bauch.svg" class="rounded-full">
-                            </div>
-                        </td>
-                        <td class="border px-4 py-2" th:text="${demande.demande.idDemande}"></td>
-                        <td class="border px-4 py-2" th:text="${demande.demande.nom} +' '+ ${demande.demande.prenom}"></td>
-                        <td class="border px-4 py-2" th:text="${demande.demande.tel}"></td>
-                        <td class="border px-4 py-2" th:text="${demande.dateRefus}"></td>
-                        <td class="px-4 py-3 flex space-x-2">
-                            <button class="button small red --jb-modal" data-target="sample-modal" type="button">
-                                <span class="icon"><i class="mdi mdi-trash-can"></i></span> Refuser
-                            </button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <form action="/dashboard/profil" method="POST" th:object="${profilDTO}" class="space-y-6">
+                    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden" />
+                <div class="field spaced">
+                    <label class="label">Email</label>
+                    <div class="control icons-left">
+                        <input class="input" type="text" name="email" id="email" autocomplete="email" readonly th:value="${profilDTO.email}">
+                        <span class="icon is-small left"><i class="mdi mdi-account"></i></span>
+                    </div>
+                    <p class="help">
+                        Entrer votre Email
+                    </p>
+                </div>
+
+                <div class="field spaced">
+                    <label class="label">mot de passe</label>
+                    <div class="control icons-left">
+                        <input class="input" type="password" name="password" id="password" autocomplete="mot de passe" th:field="${profilDTO.password}">
+                        <span class="icon is-small left"><i class="mdi mdi-account"></i></span>
+                    </div>
+                    <p class="help">
+                        Entrer votre mot de passe
+                    </p>
+                </div>
+
+                <div class="field spaced">
+                    <label class="label">nouveau mot de passe</label>
+                    <div class="control icons-left">
+                        <input class="input" type="password" name="newPassword" id="newPassword" autocomplete="mot de passe" th:field="${profilDTO.newPassword}">
+                        <span class="icon is-small left"><i class="mdi mdi-account"></i></span>
+                    </div>
+                    <p class="help">
+                        nouveau mot de passe
+                    </p>
+                </div>
+
+                <div class="field spaced">
+                    <label class="label">Confirmer</label>
+                    <div class="control icons-left">
+                        <input class="input" type="password" name="confirm" id="confirm" autocomplete="mot de passe" th:field="${profilDTO.confirm}">
+                        <span class="icon is-small left"><i class="mdi mdi-account"></i></span>
+                    </div>
+                    <p class="help">
+                        confirmer mot de passe
+                    </p>
+                </div>
+                    <button type="submit" class="button blue">Modifier</button>
+                </form>
             </div>
         </div>
     </section>
@@ -156,6 +175,39 @@
 <script type="text/javascript" src="/dist/js/main.min.js?v=1628755089081"></script>
 
 <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css">
+<script src="/Toast/Toast.min.js"></script>
 
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    var successMessage = /*[[${success}]]*/ null;
+    var errorMessage = /*[[${erreur}]]*/ null;
+
+    if (successMessage) {
+        Toastify({
+            text: successMessage,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+            stopOnFocus: true,
+        }).showToast();
+    }
+
+    if (errorMessage) {
+        Toastify({
+            text: errorMessage,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+            stopOnFocus: true,
+        }).showToast();
+    }
+
+    /*]]>*/
+</script>
 </body>
 </html>

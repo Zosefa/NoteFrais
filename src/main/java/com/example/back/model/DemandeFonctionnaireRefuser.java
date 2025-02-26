@@ -19,6 +19,10 @@ public class DemandeFonctionnaireRefuser {
     @JoinColumn(name = "id_demande_fonctionnaire")
     private DemandeFonctionnaire demandeFonctionnaire;
 
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    private Users users;
+
     public Integer getIdDemandeFonctionnaireRefuser() {
         return idDemandeFonctionnaireRefuser;
     }
@@ -41,5 +45,13 @@ public class DemandeFonctionnaireRefuser {
 
     public void setDemandeFonctionnaire(DemandeFonctionnaire demandeFonctionnaire) {
         this.demandeFonctionnaire = demandeFonctionnaire;
+    }
+
+    public Users getUsers() {
+        return users;
+    }
+
+    public void setUsers(Users users) {
+        this.users = users;
     }
 }

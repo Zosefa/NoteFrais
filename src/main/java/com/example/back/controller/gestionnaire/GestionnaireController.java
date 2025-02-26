@@ -1,12 +1,10 @@
 package com.example.back.controller.gestionnaire;
 
 import com.example.back.client.EqimaClient;
+import com.example.back.model.*;
 import com.example.back.model.DTO.SavingsAccountResponse;
-import com.example.back.model.DemandeFonctionnaire;
-import com.example.back.model.DemandeFonctionnaireRefuser;
-import com.example.back.model.DemandeFonctionnaireValider;
-import com.example.back.model.Fonctionnaire;
 import com.example.back.model.ResultDTO.ResultDemandeFonctionnaireDTO;
+import com.example.back.repository.UserRepository;
 import com.example.back.service.DemandeFonctionnaireRefuserService;
 import com.example.back.service.DemandeFonctionnaireService;
 import com.example.back.service.DemandeFonctionnaireValiderService;
@@ -43,7 +41,13 @@ public class GestionnaireController {
     private DemandeFonctionnaireRefuserService demandeFonctionnaireRefuserService;
 
     @Autowired
+    private NotificationController notificationController;
+
+    @Autowired
     private EqimaClient eqimaClient;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping
     public String gestionnaire(){
@@ -63,6 +67,9 @@ public class GestionnaireController {
     @PostMapping("/demande-valider/{id}")
     public String validation(@PathVariable Integer id, RedirectAttributes redirectAttributes){
         DemandeFonctionnaire demandeFonctionnaire = demandeFonctionnaireService.findById(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Users users = userRepository.findByEmail(email);
         if(demandeFonctionnaire != null){
             LocalDateTime now = LocalDateTime.now();
             java.util.Date dateValidationUtil = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
@@ -71,8 +78,12 @@ public class GestionnaireController {
             DemandeFonctionnaireValider demandeFonctionnaireValider = new DemandeFonctionnaireValider();
             demandeFonctionnaireValider.setDateValidation(dateValidation);
             demandeFonctionnaireValider.setDemandeFonctionnaire(demandeFonctionnaire);
+            demandeFonctionnaireValider.setUsers(users);
 
             demandeFonctionnaireValiderService.create(demandeFonctionnaireValider);
+
+            notificationController.insert(demandeFonctionnaire,true);
+
             redirectAttributes.addFlashAttribute("success", "La demande a été validée avec succès !");
         }else{
             redirectAttributes.addFlashAttribute("erreur", "Demande non trouver !");
@@ -83,6 +94,9 @@ public class GestionnaireController {
     @PostMapping("/demande-refuser/{id}")
     public String refus(@PathVariable Integer id, RedirectAttributes redirectAttributes){
         DemandeFonctionnaire demandeFonctionnaire = demandeFonctionnaireService.findById(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Users users = userRepository.findByEmail(email);
         if(demandeFonctionnaire != null){
             LocalDateTime now = LocalDateTime.now();
             java.util.Date dateValidationUtil = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
@@ -91,8 +105,10 @@ public class GestionnaireController {
             DemandeFonctionnaireRefuser demandeFonctionnaireRefuser = new DemandeFonctionnaireRefuser();
             demandeFonctionnaireRefuser.setDateRefus(dateRefus);
             demandeFonctionnaireRefuser.setDemandeFonctionnaire(demandeFonctionnaire);
+            demandeFonctionnaireRefuser.setUsers(users);
 
             demandeFonctionnaireRefuserService.create(demandeFonctionnaireRefuser);
+            notificationController.insert(demandeFonctionnaire,false);
             redirectAttributes.addFlashAttribute("success", "La demande a été refusé avec succès !");
         }else{
             redirectAttributes.addFlashAttribute("erreur", "Demande non trouver !");

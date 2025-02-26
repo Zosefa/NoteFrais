@@ -7,11 +7,14 @@ import com.example.back.model.DTO.ProfilDTO;
 import com.example.back.model.DTO.SavingsAccountResponse;
 import com.example.back.model.DemandeFonctionnaire;
 import com.example.back.model.Fonctionnaire;
+import com.example.back.model.Notification;
 import com.example.back.model.Users;
 import com.example.back.repository.UserRepository;
 import com.example.back.service.DemandeFonctionnaireService;
 import com.example.back.service.FonctionnaireService;
+import com.example.back.service.NotificationService;
 import com.example.back.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -37,6 +40,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -57,8 +61,11 @@ public class ClientController {
 
     private final String UPLOAD_DIR ="Uploads";
 
+    @Autowired
+    private NotificationService notificationService;
+
     @GetMapping
-    public String home(@AuthenticationPrincipal UserDetails userDetails, Model model){
+    public String home(@AuthenticationPrincipal UserDetails userDetails, Model model, HttpServletRequest request){
 
         if (userDetails != null) {
             Set<String> roles = userDetails.getAuthorities().stream()
@@ -67,11 +74,24 @@ public class ClientController {
 
             model.addAttribute("roles", roles);
         }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Fonctionnaire fonctionnaire = fonctionnaireService.findByEmail(email);
+        List<Notification> notifications = notificationService.allNotification(fonctionnaire.getIdFonctionnaire());
+        Integer total = notificationService.total(fonctionnaire.getIdFonctionnaire());
+        String referer = request.getHeader("Referer");
+        if (referer == null) {
+            referer = "/client";
+        }
+
+        model.addAttribute("notifications", notifications);
+        model.addAttribute("total",total);
+        model.addAttribute("previousUrl", referer);
         return "client/Dashboard";
     }
 
     @GetMapping("/demande")
-    public String demande(Model model,@AuthenticationPrincipal UserDetails userDetails){
+    public String demande(Model model,@AuthenticationPrincipal UserDetails userDetails,HttpServletRequest request){
         if (userDetails != null) {
             Set<String> roles = userDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
@@ -79,6 +99,19 @@ public class ClientController {
 
             model.addAttribute("roles", roles);
         }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Fonctionnaire fonctionnaire = fonctionnaireService.findByEmail(email);
+        List<Notification> notifications = notificationService.allNotification(fonctionnaire.getIdFonctionnaire());
+        Integer total = notificationService.total(fonctionnaire.getIdFonctionnaire());
+        String referer = request.getHeader("Referer");
+        if (referer == null) {
+            referer = "/client/demande";
+        }
+
+        model.addAttribute("notifications", notifications);
+        model.addAttribute("total",total);
+        model.addAttribute("previousUrl", referer);
         DemandeFonctionnaireDTO demandeFonctionnaireDTO = new DemandeFonctionnaireDTO();
         model.addAttribute(demandeFonctionnaireDTO);
         return "client/DemandeJustificatif";
@@ -163,7 +196,7 @@ public class ClientController {
 
 
     @GetMapping("/profil")
-    public String profil(Model model,@AuthenticationPrincipal UserDetails userDetails) {
+    public String profil(Model model,@AuthenticationPrincipal UserDetails userDetails,HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         ProfilDTO profilDTO = new ProfilDTO();
@@ -178,6 +211,17 @@ public class ClientController {
 
             model.addAttribute("roles", roles);
         }
+        Fonctionnaire fonctionnaire = fonctionnaireService.findByEmail(email);
+        List<Notification> notifications = notificationService.allNotification(fonctionnaire.getIdFonctionnaire());
+        Integer total = notificationService.total(fonctionnaire.getIdFonctionnaire());
+        String referer = request.getHeader("Referer");
+        if (referer == null) {
+            referer = "/client/profil";
+        }
+
+        model.addAttribute("notifications", notifications);
+        model.addAttribute("total",total);
+        model.addAttribute("previousUrl", referer);
 
         return "client/Profil";
     }
@@ -225,12 +269,25 @@ public class ClientController {
     }
 
     @GetMapping("/misa-solde")
-    public String misaSolde(Model model){
+    public String misaSolde(Model model,HttpServletRequest request){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         Fonctionnaire fonctionnaire = fonctionnaireService.findByEmail(email);
         SavingsAccountResponse result = eqimaClient.accountBalance(fonctionnaire.getIdClient());
-        Double solde = result.getSavingsAccounts()[0].getAccountBalance();
+        Double solde = Double.valueOf(0);
+        if(result == null){
+            solde = result.getSavingsAccounts()[0].getAccountBalance();
+        }
+        List<Notification> notifications = notificationService.allNotification(fonctionnaire.getIdFonctionnaire());
+        Integer total = notificationService.total(fonctionnaire.getIdFonctionnaire());
+        String referer = request.getHeader("Referer");
+        if (referer == null) {
+            referer = "/client/misa-solde";
+        }
+
+        model.addAttribute("notifications", notifications);
+        model.addAttribute("total",total);
+        model.addAttribute("previousUrl", referer);
         model.addAttribute("solde", solde);
         return "client/solde";
     }

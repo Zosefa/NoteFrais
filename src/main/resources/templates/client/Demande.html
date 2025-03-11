@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" class="form-screen">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/Toast/Toast.min.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <title>Demande</title>
+</head>
+<body class="h-screen bg-gray-100 flex items-center justify-center">
+
+<div class="w-100 d-flex justify-content-center a;ign-items-center" style="height: 100vh;">
+    <div class="container m-auto">
+        <div class="card">
+            <div class="card-header">
+                Demande
+            </div>
+            <div class="card-body">
+
+                <form action="/envoie" method="POST" enctype="multipart/form-data" th:object="${demandeDTO}">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-12 mt-3">
+                            <input type="text" placeholder="Nom" class="form-control" name="nom" id="nom" autocomplete="nom" th:field="${demandeDTO.nom}">
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12 mt-3">
+                            <input type="text" placeholder="prenom" class="form-control" name="prenom" id="prenom" autocomplete="nom" th:field="${demandeDTO.prenom}">
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12 mt-3">
+                            <input type="number" placeholder="cin" class="form-control" name="CIN" id="CIN" autocomplete="nom" th:field="${demandeDTO.CIN}">
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12 mt-3">
+                            <input type="date" placeholder="prenom" class="form-control" name="date" id="date" autocomplete="nom" th:field="${demandeDTO.date}">
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12 mt-3">
+                            <input type="number" placeholder="telephone" class="form-control" name="tel" id="tel" autocomplete="nom" th:field="${demandeDTO.tel}">
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12 mt-3">
+                            <input type="text" placeholder="adresse" class="form-control" name="adresse" id="adresse" autocomplete="nom" th:field="${demandeDTO.adresse}">
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12 mt-3">
+                            <input type="email" placeholder="email" class="form-control" name="email" id="email" autocomplete="nom" th:field="${demandeDTO.email}">
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12 mt-3">
+                            <input type="file" placeholder="image" class="form-control" id="image" name="image">
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12 mt-3">
+                            <input type="file" placeholder="imageCIN" class="form-control" id="imageCIN" name="imageCIN">
+                        </div>
+                        <div class="w-100 d-flex mt-3 justify-content-between">
+                            <button class="btn btn-primary" type="submit">envoyer</button>
+                            <a href="/sso/login" >se connecter</a>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts below are for demo only -->
+<script type="text/javascript" src="/dist/js/main.min.js?v=1628755089081"></script>
+
+<script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '658339141622648');
+    fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=658339141622648&ev=PageView&noscript=1"/></noscript>
+
+<link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css">
+<script src="/Toast/Toast.min.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    var successMessage = /*[[${success}]]*/ null;
+    var errorMessage = /*[[${erreur}]]*/ null;
+
+    if (successMessage) {
+        Toastify({
+            text: successMessage,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+            stopOnFocus: true,
+        }).showToast();
+    }
+
+    if (errorMessage) {
+        Toastify({
+            text: errorMessage,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+            stopOnFocus: true,
+        }).showToast();
+    }
+
+    /*]]>*/
+</script>
+
+</body>
+</html>

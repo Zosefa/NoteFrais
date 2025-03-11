@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" class="" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard</title>
+
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/dist/css/main.css?v=1628755089081">
+  <link rel="stylesheet" href="/Toast/Toast.min.css">
+
+</head>
+<body>
+<div id="app">
+
+  <nav id="navbar-main" class="navbar is-fixed-top">
+
+    <div class="navbar-brand">
+      <a class="navbar-item mobile-aside-button">
+        <span class="icon"><i class="mdi mdi-forwardburger mdi-24px"></i></span>
+      </a>
+    </div>
+
+    <div class="navbar-brand is-right">
+      <a class="navbar-item --jb-navbar-menu-toggle" data-target="navbar-menu">
+        <span class="icon"><i class="mdi mdi-dots-vertical mdi-24px"></i></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu" id="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item dropdown has-divider has-user-avatar">
+          <a class="navbar-link">
+            <div class="user-avatar">
+              <img src="https://avatars.dicebear.com/v2/initials/john-doe.svg" alt="John Doe" class="rounded-full">
+            </div>
+            <div class="is-user-name"><span>EQIMA</span></div>
+            <span class="icon"><i class="mdi mdi-chevron-down"></i></span>
+          </a>
+          <div class="navbar-dropdown">
+            <a href="/dashboard/profil" class="navbar-item">
+              <span class="icon"><i class="mdi mdi-account"></i></span>
+              <span>Profile</span>
+            </a>
+            <hr class="navbar-divider">
+            <a class="navbar-item">
+              <form action="/logout" method="post">
+                <span class="icon"><i class="mdi mdi-logout"></i></span>
+                <button type="submit">Deconnexion</button>
+              </form>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </nav>
+
+  <aside class="aside is-placed-left is-expanded">
+    <div class="aside-tools">
+      <div>
+        <b class="font-black">EQIMA Admin</b>
+      </div>
+    </div>
+    <div class="menu is-menu-main">
+      <p class="menu-label">General</p>
+      <ul class="menu-list">
+        <li class="--set-active-index-html">
+          <a href="/dashboard">
+            <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
+            <span class="menu-item-label">Tableau de bord</span>
+          </a>
+        </li>
+      </ul>
+      <p class="menu-label">Examples</p>
+      <ul class="menu-list">
+        <li class="active">
+          <a href="/dashboard/demande">
+            <span class="icon"><i class="mdi mdi-table"></i></span>
+            <span class="menu-item-label">Demande</span>
+          </a>
+        </li>
+        <li class="--set-active-forms-html">
+          <a href="/dashboard/demande-accorder">
+            <span class="icon"><i class="mdi mdi-square-edit-outline"></i></span>
+            <span class="menu-item-label">Demande Accorder</span>
+          </a>
+        </li>
+        <li class="--set-active-profile-html">
+          <a href="/dashboard/demande-refuser">
+            <span class="icon"><i class="mdi mdi-account-circle"></i></span>
+            <span class="menu-item-label">Demande Refuser</span>
+          </a>
+        </li>
+        <li class="--set-active-forms-html">
+          <a href="/dashboard/poste">
+            <span class="icon"><i class="mdi mdi-account-circle"></i></span>
+            <span class="menu-item-label">Poste</span>
+          </a>
+        </li>
+        <li class="--set-active-forms-html">
+          <a href="/dashboard/indemnite">
+            <span class="icon"><i class="mdi mdi-account-circle"></i></span>
+            <span class="menu-item-label">Indemnite</span>
+          </a>
+        </li>
+        <li class="--set-active-forms-html">
+          <a href="/dashboard/type-mission">
+            <span class="icon"><i class="mdi mdi-account-circle"></i></span>
+            <span class="menu-item-label">Type Mission</span>
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </aside>
+
+  <section class="section main-section">
+    <div class="card has-table">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
+          Liste demande
+        </p>
+      </header>
+      <div class="card-content">
+        <table>
+          <thead>
+          <tr>
+            <th class="image-cell"></th>
+            <th>Nom</th>
+            <th>Prenom</th>
+            <th>Adresse</th>
+            <th>CIN</th>
+            <th>Image et Image CIN</th>
+            <th>Date de naissance</th>
+            <th>Tel</th>
+            <th>Date de demande</th>
+            <th>Action</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="demande : ${demandes}">
+            <td class="image-cell">
+              <div class="image">
+                <img src="https://avatars.dicebear.com/v2/initials/rebecca-bauch.svg" class="rounded-full">
+              </div>
+            </td>
+            <td class="px-4 py-3" th:text="${demande.nom}"></td>
+            <td class="px-4 py-3" th:text="${demande.prenom}"></td>
+            <td class="px-4 py-3" th:text="${demande.adresse}"></td>
+            <td class="px-4 py-3" th:text="${demande.CIN}"></td>
+            <td class="px-4 py-3">
+              <img th:src="@{'http://localhost:8081/' + ${demande.image}}" alt="Image"
+                   class="w-full h-auto object-cover rounded-md cursor-pointer transition-transform duration-200 hover:scale-105"
+                   onclick="openModal(this.src)" style="width: 50px !important;" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-backdrop="false"/>
+
+              <!-- Image déclencheur de modal pour l'image CIN -->
+              <img th:src="@{'http://localhost:8081/Uploads/' + ${demande.imageCIN}}" alt="Image"
+                   class="w-full h-auto object-cover rounded-md cursor-pointer transition-transform duration-200 hover:scale-105"
+                   onclick="openModal(this.src)" style="width: 50px !important;" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-backdrop="false"/>
+
+              <!-- Modal -->
+              <div class="modal fade" id="staticBackdrop" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Image en grand</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <!-- Image affichée dans le modal -->
+                      <img id="modal-image" src="" alt="Image" class="w-100 h-auto object-cover rounded-md">
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            </td>
+            <td class="px-4 py-3" th:text="${demande.dateNaissance}"></td>
+            <td class="px-4 py-3" th:text="${demande.tel}"></td>
+            <td class="px-4 py-3" th:text="${demande.dateDemande}"></td>
+
+            <td class="px-4 py-3">
+              <button class="button small green" data-bs-toggle="modal" data-bs-target="#roleModal" data-bs-backdrop="false">
+                Valider la Demande
+              </button>
+<!--            -->
+
+            <!-- Modal de sélection des rôles -->
+            <div class="modal fade" id="roleModal" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="roleModal" aria-hidden="true" >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="roleModalLabel">Attribuer des rôles</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+
+                    <div class="modal-body">
+                      <form th:action="@{/dashboard/validation/{id}(id=${demande.idDemande})}" method="post" id="roleForm">
+                        <div class="field spaced">
+                          <label class="label">Poste</label>
+                          <div class="select icons-left">
+                            <select name="poste">
+                              <option value="">Selectionner un poste..</option>
+                              <option th:each="poste : ${postes}" th:text="${poste.poste}" th:value="${poste.idPoste}"></option>
+                            </select>
+                          </div>
+                          <p class="help">
+                            Selectionner le poste
+                          </p>
+                        </div>
+                      <div th:each="role : ${roles}">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" th:id="'role-' + ${role.idRole}" th:value="${role.idRole}" name="roles" />
+                          <label class="form-check-label" th:for="'role-' + ${role.idRole}" th:text="${role.role}"></label>
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn-success">Valider</button>
+                      </form>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+
+                </div>
+              </div>
+            </div>
+
+
+
+
+            <form th:action="@{/dashboard/refus/{id}(id=${demande.idDemande})}" method="post">
+                <button class="button small red --jb-modal" data-target="sample-modal" type="submit">
+                  <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                </button>
+              </form>
+
+
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script type="text/javascript" src="/dist/js/main.min.js?v=1628755089081"></script>
+
+<link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css">
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/Toast/Toast.min.js"></script>
+
+<script th:inline="javascript">
+  /*<![CDATA[*/
+
+  var successMessage = /*[[${success}]]*/ null;
+  var errorMessage = /*[[${erreur}]]*/ null;
+
+  if (successMessage) {
+    Toastify({
+      text: successMessage,
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "right",
+      backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+      stopOnFocus: true,
+    }).showToast();
+  }
+
+  if (errorMessage) {
+    Toastify({
+      text: errorMessage,
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "right",
+      backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+      stopOnFocus: true,
+    }).showToast();
+  }
+  /*]]>*/
+</script>
+
+<script>
+  function openModal(imageSrc) {
+    document.getElementById('modal-image').src = imageSrc;
+  }
+</script>
+
+</body>
+</html>

@@ -17,7 +17,8 @@ public class Role {
     public enum RoleName {
         ADMIN,
         USER,
-        GESTIONNAIRE
+        GESTIONNAIRE,
+        SUPERADMIN
     }
 
     public Integer getIdRole() {

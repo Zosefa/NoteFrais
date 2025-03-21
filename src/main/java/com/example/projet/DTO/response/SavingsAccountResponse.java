@@ -7,6 +7,9 @@ public class SavingsAccountResponse {
     private SavingsAccount[] savingsAccounts;
 
     public SavingsAccount[] getSavingsAccounts() {
+        if (savingsAccounts == null) {
+            return new SavingsAccount[]{new SavingsAccount()};
+        }
         return savingsAccounts;
     }
 
@@ -20,6 +23,10 @@ public class SavingsAccountResponse {
 
         @JsonProperty("id")
         private Integer id;
+
+        public SavingsAccount() {
+            this.accountBalance = 0;
+        }
 
 
         public Integer getId() {

@@ -45,6 +45,10 @@ public class Fonctionnaire {
     @Column(name = "numero_visa")
     private String numeroVisa;
 
+    @ManyToOne
+    @JoinColumn(name = "id_etablissement")
+    private Etablissement etablissement;
+
     public Integer getIdFonctionnaire() {
         return idFonctionnaire;
     }
@@ -139,5 +143,13 @@ public class Fonctionnaire {
 
     public void setNumeroVisa(String numeroVisa) {
         this.numeroVisa = numeroVisa;
+    }
+
+    public Etablissement getEtablissement() {
+        return etablissement;
+    }
+
+    public void setEtablissement(Etablissement etablissement) {
+        this.etablissement = etablissement;
     }
 }

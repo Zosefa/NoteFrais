@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Etablissement</title>
+    <link rel="stylesheet" href="/assets/simple-datatables.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="/assets/all.js"></script>
+    <link rel="stylesheet" href="/Toast/Toast.min.css">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap.min.css">
+</head>
+<body class="sb-nav-fixed">
+<div th:replace="racine :: navbar"></div>
+<div id="layoutSidenav">
+    <div th:replace="racine :: aside"></div>
+    <div id="layoutSidenav_content">
+        <main class="container-fluid mt-4">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow">
+                        <header class="card-header bg-primary text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="mdi mdi-account-multiple"></i> Enregistrer un etablissement avec un ADMIN
+                            </h5>
+                        </header>
+                        <div class="card-body">
+                            <form action="/eqima/etablissement" method="POST" class="space-y-6" th:object="${fonctionnaireDTO}">
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Etablissement</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="etablissement" id="etablissement">
+                                    </div>
+                                </div>
+
+                                <!-- Lettre de mission -->
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Nom personnel</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="nom" id="nom" th:field="${fonctionnaireDTO.nom}">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Prenom personnel</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="prenom" id="prenom" th:field="${fonctionnaireDTO.prenom}">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Telephone personnel</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="tel" id="tel" th:field="${fonctionnaireDTO.tel}">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Email personnel</label>
+                                    <div class="input-group">
+                                        <input type="email" class="form-control" name="email" id="email" th:field="${fonctionnaireDTO.email}">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Adresse personnel</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="adresse" id="adresse" th:field="${fonctionnaireDTO.adresse}">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">CIN personnel</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="cin" id="cin" th:field="${fonctionnaireDTO.CIN}">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">date de naissance personnel</label>
+                                    <div class="input-group">
+                                        <input type="date" class="form-control" name="date" id="date" th:field="${fonctionnaireDTO.date}">
+                                    </div>
+                                </div>
+
+                                <!-- Bouton Envoyer -->
+                                <div class="text-end">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="mdi mdi-send"></i> Envoyer
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="/assets/bootstrap.bundle.min.js"></script>
+<script src="/js/scripts.js"></script>
+<script src="/Toast/Toast.min.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var successMessage = /*[[${success}]]*/ null;
+    var errorMessage = /*[[${erreur}]]*/ null;
+
+    if (successMessage) {
+        Toastify({
+            text: successMessage,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+            stopOnFocus: true,
+        }).showToast();
+    }
+
+    if (errorMessage) {
+        Toastify({
+            text: errorMessage,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+            stopOnFocus: true,
+        }).showToast();
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

@@ -1,214 +1,89 @@
 <!DOCTYPE html>
-<html lang="en" class="" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Client</title>
-    <link rel="stylesheet" href="/dist/css/main.css?v=1628755089081">
+    <title>Demande Justificatif</title>
+    <link rel="stylesheet" href="/assets/simple-datatables.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="/assets/all.js"></script>
     <link rel="stylesheet" href="/Toast/Toast.min.css">
-
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap.min.css">
 </head>
-<body>
+<body class="sb-nav-fixed">
+<div th:replace="racine :: navbar"></div>
+<div id="layoutSidenav">
+    <div th:replace="racine :: aside"></div>
+    <div id="layoutSidenav_content">
+        <main class="container-fluid mt-4">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow">
+                        <header class="card-header bg-primary text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="mdi mdi-account-multiple"></i> Envoyer une demande
+                            </h5>
+                        </header>
+                        <div class="card-body">
+                            <form action="/client/demandes" method="POST" enctype="multipart/form-data" class="space-y-6" th:object="${demandeFonctionnaireDTO}">
 
-<div id="app">
+                                <!-- Lettre de mission -->
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Lettre de mission</label>
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" name="document" id="document">
+                                    </div>
+                                </div>
 
-    <nav id="navbar-main" class="navbar is-fixed-top">
-        <div class="navbar-brand">
-            <a class="navbar-item mobile-aside-button">
-                <span class="icon"><i class="mdi mdi-forwardburger mdi-24px"></i></span>
-            </a>
-        </div>
+                                <!-- Date début de mission -->
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Date début de mission</label>
+                                    <input type="date" class="form-control" name="dateDebut" id="dateDebut" th:field="${demandeFonctionnaireDTO.dateDebut}">
+                                </div>
 
-        <div class="navbar-brand is-right">
-            <a class="navbar-item --jb-navbar-menu-toggle" data-target="navbar-menu">
-                <span class="icon"><i class="mdi mdi-dots-vertical mdi-24px"></i></span>
-            </a>
-        </div>
-        <div class="navbar-menu" id="navbar-menu">
-            <div class="navbar-end">
+                                <!-- Date fin de mission -->
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Date fin de mission</label>
+                                    <input type="date" class="form-control" name="dateFin" id="dateFin" th:field="${demandeFonctionnaireDTO.dateFin}">
+                                </div>
 
-                <div class="navbar-item dropdown has-divider has-user-avatar">
-                    <a class="navbar-link">
-        <span class="icon">
-            <i class="mdi mdi-bell"></i>
-            <span class="badge is-danger" th:if="${total > 0}" th:text="${total}" style="position: absolute; top: 1px; right: 12px; background-color: red; color: white; border-radius: 50%; padding: 1px 9px; font-size: 12px;"></span>
-        </span>
-                    </a>
-                    <div class="navbar-dropdown" style="width: 400px; max-height: 400px; overflow-y: auto;">
-                        <div th:if="${notifications.isEmpty()}">
-                            <p class="navbar-item">Aucune notification</p>
-                        </div>
-                        <div th:each="notification : ${notifications}">
-                            <form th:action="@{/notificationLue/{id}(id=${notification.idNotification})}" method="post">
-                                <input type="hidden" name="previousUrl" th:value="${previousUrl}" />
-                                <button type="submit" class="navbar-item" style="background: none; border: none; text-align: left; width: 100%;">
-                                    <span class="icon"><i class="mdi mdi-email"></i></span>
-                                    Votre mission a été
-                                    <span th:if="${notification.etat}">validée</span>
-                                    <span th:if="${!notification.etat}">rejetée</span>
-                                </button>
+                                <!-- Type de mission -->
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Type de mission</label>
+                                    <select name="idType" class="form-select">
+                                        <option value="">Sélectionner le type de mission...</option>
+                                        <option th:each="type : ${types}" th:text="${type.typeMission}" th:value="${type.idTypeMission}"></option>
+                                    </select>
+                                </div>
+
+                                <!-- Motif -->
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Motif</label>
+                                    <textarea class="form-control" name="motif" id="motif" th:field="${demandeFonctionnaireDTO.motif}" rows="3"></textarea>
+                                </div>
+
+                                <!-- Bouton Envoyer -->
+                                <div class="text-end">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="mdi mdi-send"></i> Envoyer
+                                    </button>
+                                </div>
                             </form>
-                            <hr class="navbar-divider">
                         </div>
-                    </div>
-
-                </div>
-
-                <div class="navbar-item dropdown has-divider has-user-avatar">
-                    <a class="navbar-link">
-                        <div class="user-avatar">
-                            <img src="https://avatars.dicebear.com/v2/initials/john-doe.svg" alt="John Doe" class="rounded-full">
-                        </div>
-                        <div class="is-user-name"><span>EQIMA</span></div>
-                        <span class="icon"><i class="mdi mdi-chevron-down"></i></span>
-                    </a>
-                    <div class="navbar-dropdown">
-                        <a href="/client/profil" class="navbar-item">
-                            <span class="icon"><i class="mdi mdi-account"></i></span>
-                            <span>Profile</span>
-                        </a>
-
-                        <a href="/gestionnaire" class="navbar-item" th:if="${roles != null and roles.contains('ROLE_GESTIONNAIRE')}">
-                            <span class="icon"><i class="mdi mdi-account"></i></span>
-                            <span>gestion</span>
-                        </a>
-
-                        <hr class="navbar-divider">
-                        <a class="navbar-item">
-                            <form action="/logout" method="post">
-                                <span class="icon"><i class="mdi mdi-logout"></i></span>
-                                <button type="submit">Deconnexion</button>
-                            </form>
-                        </a>
                     </div>
                 </div>
             </div>
-        </div>
-    </nav>
-
-    <aside class="aside is-placed-left is-expanded">
-        <div class="aside-tools">
-            <div>
-                <b class="font-black">EQIMA Client</b>
-            </div>
-        </div>
-        <div class="menu is-menu-main">
-            <p class="menu-label">General</p>
-            <ul class="menu-list">
-                <li class="--set-active-index-html">
-                    <a href="/client">
-                        <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
-                        <span class="menu-item-label">Tableau de bord</span>
-                    </a>
-                </li>
-            </ul>
-            <p class="menu-label">Examples</p>
-            <ul class="menu-list">
-                <li class="active">
-                    <a href="/client/demande">
-                        <span class="icon"><i class="mdi mdi-table"></i></span>
-                        <span class="menu-item-label">Envoyer une demande</span>
-                    </a>
-                </li>
-
-                <li class="--set-active-forms-html">
-                    <a href="/client/misa-solde">
-                        <span class="icon"><i class="mdi mdi-table"></i></span>
-                        <span class="menu-item-label">Solde</span>
-                    </a>
-                </li>
-
-            </ul>
-
-        </div>
-    </aside>
-
-    <section class="section main-section">
-        <div class="card has-table">
-            <header class="card-header">
-                <p class="card-header-title">
-                    <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
-                    Envoyer une demande
-                </p>
-            </header>
-            <div class="card-content">
-                <form action="/client/demandes" method="POST" enctype="multipart/form-data" class="space-y-6" th:object="${demandeFonctionnaireDTO}">
-
-                    <div class="field spaced">
-                        <label class="label">Lettre de mission</label>
-                        <div class="field-body">
-                            <div class="field file">
-                                <label class="upload control">
-                                    <a class="button blue">
-                                        importer le document
-                                    </a>
-                                    <input type="file" name="document" id="document">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field spaced">
-                        <label class="label">Date debut de mission</label>
-                        <div class="control icons-left">
-                            <input class="input" type="date" name="dateDebut" id="dateDebut" autocomplete="dateDebut" th:field="${demandeFonctionnaireDTO.dateDebut}"/>
-                        </div>
-                        <p class="help">
-                            Entrer la date de debut
-                        </p>
-                    </div>
-
-                    <div class="field spaced">
-                        <label class="label">Date fin de mission</label>
-                        <div class="control icons-left">
-                            <input class="input" type="date" name="dateFin" id="dateFin" autocomplete="dateFin" th:field="${demandeFonctionnaireDTO.dateFin}"/>
-                        </div>
-                        <p class="help">
-                            Entrer la date fin
-                        </p>
-                    </div>
-
-                    <div class="field spaced">
-                        <label class="label">Type de la mission</label>
-                        <div class="select icons-left">
-                            <select name="idType">
-                                <option value="">Selectionner le type de mission..</option>
-                                <option th:each="type : ${types}" th:text="${type.typeMission}" th:value="${type.idTypeMission}"></option>
-                            </select>
-                        </div>
-                        <p class="help">
-                            Entrer la date fin
-                        </p>
-                    </div>
-
-                    <div class="field spaced">
-                        <label class="label">Motif</label>
-                        <div class="control icons-left">
-                            <textarea class="textarea" type="text" name="motif" id="motif" autocomplete="motif" th:field="${demandeFonctionnaireDTO.motif}"> </textarea>
-                        </div>
-                        <p class="help">
-                            Entrer le motif
-                        </p>
-                    </div>
-
-                    <button type="submit" class="button blue">Envoyer</button>
-                </form>
-            </div>
-
-        </div>
-    </section>
-
+        </main>
+    </div>
 </div>
 
-<script type="text/javascript" src="/dist/js/main.min.js?v=1628755089081"></script>
-
-<link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css">
-
+<script src="/assets/bootstrap.bundle.min.js"></script>
+<script src="/js/scripts.js"></script>
 <script src="/Toast/Toast.min.js"></script>
 <script th:inline="javascript">
     /*<![CDATA[*/
-
     var successMessage = /*[[${success}]]*/ null;
     var errorMessage = /*[[${erreur}]]*/ null;
 
@@ -235,9 +110,7 @@
             stopOnFocus: true,
         }).showToast();
     }
-
     /*]]>*/
 </script>
-
 </body>
 </html>

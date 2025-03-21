@@ -34,6 +34,9 @@ public class CustomKeycloakSuccessHandler implements AuthenticationSuccessHandle
             } else if (role.equals("ROLE_USER")) {
                 redirectUrl = "/client";
                 break;
+            } else if (role.equals("ROLE_SUPERADMIN")) {
+                redirectUrl = "/eqima";
+                break;
             }
         }
 

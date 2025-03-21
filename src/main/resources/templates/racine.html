@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" class="" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/assets/simple-datatables.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/assets/all.js"></script>
+  <link rel="stylesheet" href="/Toast/Toast.min.css">
+</head>
+<body class="sb-nav-fixed">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark" th:fragment="navbar">
+  <!-- Navbar Brand-->
+  <a class="navbar-brand ps-3" >NOTEFRAIS</a>
+  <!-- Sidebar Toggle-->
+  <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+  <!-- Navbar Search-->
+  <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+    <div class="input-group">
+      <button class="btn btn-primary" id="btnNavbarSearch" type="button">user</button>
+    </div>
+  </form>
+  <!-- Navbar-->
+  <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+        <li><a class="dropdown-item" href="/profil">Profil</a></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li>
+          <form action="/logout" method="post" class="dropdown-item">
+            <span class="icon"><i class="mdi mdi-logout"></i></span>
+            <button type="submit" class="btn">Deconnexion</button>
+          </form>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+<div id="layoutSidenav">
+  <div id="layoutSidenav_nav" th:fragment="aside">
+    <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+      <div class="sb-sidenav-menu">
+        <div class="nav">
+
+          <div th:if="${rolessS.contains('ROLE_ADMIN')}">
+            <a class="nav-link active" href="/dashboard">
+              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+              Tableau de bord
+            </a>
+            <a class="nav-link" href="/dashboard/demande">
+              <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+              Demande
+            </a>
+            <a class="nav-link" href="/dashboard/demande-accorder">
+              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+              Demande Approuver
+            </a>
+            <a class="nav-link" href="/dashboard/demande-refuser">
+              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+              Demande Refuser
+            </a>
+            <a class="nav-link" href="/dashboard/poste">
+              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+              Poste
+            </a>
+            <a class="nav-link" href="/dashboard/indemnite">
+              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+              Indemnite
+            </a>
+            <a class="nav-link" href="/dashboard/type-mission">
+              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+              Type de mission
+            </a>
+          </div>
+
+
+          <div th:if="${rolessS.contains('ROLE_USER')}">
+            <a class="nav-link active" href="/client">
+              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+              Tableau de bord
+            </a>
+            <a class="nav-link" href="/client/demande">
+              <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+              Faire une demande
+            </a>
+            <a class="nav-link" href="/client/misa-solde">
+              <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+              Solde
+            </a>
+          </div>
+
+          <div th:if="${rolessS.contains('ROLE_GESTIONNAIRE')}">
+            <a class="nav-link active" href="/gestionnaire">
+              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+              Tableau de bord
+            </a>
+            <a class="nav-link" href="/gestionnaire/demande">
+              <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+              Demande Fonctionnaire
+            </a>
+          </div>
+
+
+          <div th:if="${rolessS.contains('ROLE_SUPERADMIN')}">
+            <a class="nav-link active" href="/eqima">
+              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+              Tableau de bord
+            </a>
+            <a class="nav-link active" href="/eqima/etablissement">
+              <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+              Etablissement
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+  </div>
+
+  <div id="layoutSidenav_content">
+    <main>
+
+    </main>
+  </div>
+
+</div>
+<script src="/assets/bootstrap.bundle.min.js"></script>
+<script src="/js/scripts.js"></script>
+<script src="/Toast/Toast.min.js"></script>
+
+
+
+</body>
+</html>

@@ -22,4 +22,15 @@ public class PosteService {
         return posteRepository.findAll();
     }
 
+    public List<Poste> findAllByEtablissement(Integer id)
+    {
+        return posteRepository.findAllByEtablissement(id);
+    }
+
+    public void update(Poste poste){
+        posteRepository.save(poste);
+    }
+    public void delete(Integer id){
+        posteRepository.deleteById(id);
+    }
 }

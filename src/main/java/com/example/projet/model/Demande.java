@@ -41,6 +41,10 @@ public class Demande {
     @Column(name = "date_demande")
     private Date dateDemande;
 
+    @ManyToOne
+    @JoinColumn(name = "id_etablissement")
+    private Etablissement etablissement;
+
     public Integer getIdDemande() {
         return idDemande;
     }
@@ -127,5 +131,13 @@ public class Demande {
 
     public void setDateDemande(Date dateDemande) {
         this.dateDemande = dateDemande;
+    }
+
+    public Etablissement getEtablissement() {
+        return etablissement;
+    }
+
+    public void setEtablissement(Etablissement etablissement) {
+        this.etablissement = etablissement;
     }
 }

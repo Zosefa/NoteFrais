@@ -29,7 +29,7 @@ public class DemandeFonctionnaireService {
         return demandeFonctionnaireRepository.findDemandeNotSoumis();
     }
 
-    public List<ResultDemandeFonctionnaireDTO> findDemandeFonctionnaire(Integer id){
-        return demandeFonctionnaireRepository.findDemandeFonctionnaire(id);
+    public List<ResultDemandeFonctionnaireDTO> findDemandeFonctionnaire(Integer id, Integer idEtablissemnt){
+        return demandeFonctionnaireRepository.findDemandeFonctionnaire(id , idEtablissemnt);
     }
 }

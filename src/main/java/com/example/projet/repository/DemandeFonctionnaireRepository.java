@@ -88,8 +88,9 @@ public interface DemandeFonctionnaireRepository extends JpaRepository<DemandeFon
                 AND df.id_demande_fonctionnaire NOT IN(
                     SELECT id_demande_fonctionnaire FROM demande_fonctionnaire_refuser
                 )
+                AND f.id_etablissement = :idEtablissement
                 ORDER BY
                     joursRestants ASC
 """, nativeQuery = true)
-    public List<ResultDemandeFonctionnaireDTO> findDemandeFonctionnaire(@Param("id") Integer id);
+    public List<ResultDemandeFonctionnaireDTO> findDemandeFonctionnaire(@Param("id") Integer id, @Param("idEtablissement") Integer idEtablissement);
 }

@@ -15,6 +15,7 @@ import com.example.projet.service.DemandeFonctionnaireValiderService;
 import com.example.projet.service.FonctionnaireService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Controller
@@ -56,18 +59,35 @@ public class DemandeFonctionnaireController {
 
 
     @GetMapping
-    public String gestionnaire(){
+    public String gestionnaire(Model model){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        List<String> rolesS = new ArrayList<>();
+        String id = authentication.getName();
+        for(GrantedAuthority authority : authorities) {
+            rolesS.add(authority.getAuthority());
+        }
+
+        model.addAttribute("rolessS",rolesS);
+
         return ("Gestionnaire/Dashboard");
     }
 
     @GetMapping("/demande")
     public String demandeFonctionnaire(Model model){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        List<String> rolesS = new ArrayList<>();
+        for(GrantedAuthority authority : authorities) {
+            rolesS.add(authority.getAuthority());
+        }
+        model.addAttribute("rolessS",rolesS);
         String idUser = authentication.getName();
         KeyClokResponseToken response = keyCloakClient.getToken();
         UserResponse reponseUser = keyCloakClient.getUser(idUser,response.getAccess_token());
         Fonctionnaire fonctionnaire = fonctionnaireService.findByEmail(reponseUser.getEmail());
-        List<ResultDemandeFonctionnaireDTO> demandes = demandeFonctionnaireService.findDemandeFonctionnaire(fonctionnaire.getIdFonctionnaire());
+        List<ResultDemandeFonctionnaireDTO> demandes = demandeFonctionnaireService.findDemandeFonctionnaire(fonctionnaire.getIdFonctionnaire(), fonctionnaire.getEtablissement().getIdEtablissement());
         model.addAttribute("demandes",demandes);
         return ("Gestionnaire/DemandeFonctionnaire");
     }

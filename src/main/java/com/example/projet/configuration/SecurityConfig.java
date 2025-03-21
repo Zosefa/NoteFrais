@@ -69,6 +69,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers( "/dashboard/**").hasRole("ADMIN")
                 .antMatchers( "/gestionnaire/**").hasRole("GESTIONNAIRE")
                 .antMatchers( "/client/**").hasRole("USER")
+                .antMatchers( "/eqima/**").hasRole("SUPERADMIN")
                 .anyRequest().permitAll()
                 .and()
                 .exceptionHandling()

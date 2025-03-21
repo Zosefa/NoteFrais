@@ -16,7 +16,7 @@ public class DemandeService {
         demandeRepository.save(demande);
     }
 
-    public List<Demande> findDemandeNonSoumise(){return demandeRepository.findDemandeNotSoumis();}
+    public List<Demande> findDemandeNonSoumise(Integer id){return demandeRepository.findDemandeNotSoumis(id);}
 
     public Demande findById(Integer id){
         return demandeRepository.findById(id).get();

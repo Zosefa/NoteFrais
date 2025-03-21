@@ -3,6 +3,7 @@ package com.example.projet.repository;
 import com.example.projet.model.Demande;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public interface DemandeRepository extends JpaRepository<Demande, Integer> {
     AND d.id_demande NOT IN (
         SELECT id_demande FROM demande_refuser
     )
+    AND d.id_etablissement = :id
 """,nativeQuery = true)
-    public List<Demande> findDemandeNotSoumis();
+    public List<Demande> findDemandeNotSoumis(@Param("id") Integer id);
 }

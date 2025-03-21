@@ -47,6 +47,12 @@
                         <div class="col-lg-6 col-md-6 col-12 mt-3">
                             <input type="file" placeholder="imageCIN" class="form-control" id="imageCIN" name="imageCIN">
                         </div>
+                        <div class="col-lg-6 col-md-6 col-12 mt-3">
+                            <select name="etablissement" class="form-select" required>
+                                <option value="">Sélectionner une etablissement...</option>
+                                <option th:each="etablissement : ${etablissements}" th:value="${etablissement.idEtablissement}" th:text="${etablissement.etablissement}"></option>
+                            </select>
+                        </div>
                         <div class="w-100 d-flex mt-3 justify-content-between">
                             <button class="btn btn-primary" type="submit">envoyer</button>
                             <a href="/sso/login" >se connecter</a>

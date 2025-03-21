@@ -23,4 +23,16 @@ public class TypeMissionService {
     public TypeMission findById(Integer id){
         return typeMissionRepository.findById(id).get();
     }
+
+    public List<TypeMission> findAllByEtablissement(Integer id){
+        return typeMissionRepository.findAllByEtablissement(id);
+    }
+
+    public void update(TypeMission typeMission){
+        typeMissionRepository.save(typeMission);
+    }
+
+    public void delete(Integer id){
+        typeMissionRepository.deleteById(id);
+    }
 }

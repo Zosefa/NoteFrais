@@ -37,13 +37,12 @@ public class FonctionnaireController {
     @Autowired
     private EqimaClient eqimaClient;
 
-    public void insertFonctionnaire(Demande demande, List<Integer> roles, Poste poste){
+    public void insertFonctionnaire(Demande demande, List<Integer> roles, Poste poste, Etablissement etablissement){
         CreateClientDTO client = new CreateClientDTO();
         client.setExternalId(demande.getTel());
         client.setFirstname(demande.getNom());
         client.setLastname(demande.getPrenom());
 
-        System.out.println(client);
         ClientResponseDTO resultApi = eqimaClient.createClient(client);
         Fonctionnaire fonctionnaire = new Fonctionnaire();
         fonctionnaire.setNom(demande.getNom());
@@ -57,6 +56,7 @@ public class FonctionnaireController {
         fonctionnaire.setPoste(poste);
         fonctionnaire.setIdClient(resultApi.getClientId());
         fonctionnaire.setNumeroVisa(VisaCardValidator.generateVisaCardNumber());
+        fonctionnaire.setEtablissement(etablissement);
         fonctionnaireService.create(fonctionnaire);
 
         var bCryptEncoder = new BCryptPasswordEncoder();

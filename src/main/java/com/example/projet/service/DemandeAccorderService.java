@@ -23,4 +23,9 @@ public class DemandeAccorderService {
     public List<DemandeAccorder> findAll(){
         return demandeAccorderRepository.findAll();
     }
+
+    public List<DemandeAccorder> findAllByEtablissement(Integer id)
+    {
+        return demandeAccorderRepository.findAllByEtablissement(id);
+    }
 }

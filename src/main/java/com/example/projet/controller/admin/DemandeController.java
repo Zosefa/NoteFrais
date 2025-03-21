@@ -8,6 +8,7 @@ import com.example.projet.repository.UserRepository;
 import com.example.projet.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Controller
@@ -46,22 +49,51 @@ public class DemandeController {
     @Autowired
     private KeyCloakClient keyCloakClient;
 
+    @Autowired
+    private FonctionnaireService fonctionnaireService;
+
+
+
+
     @GetMapping
-    public String dashboard(){
+    public String dashboard(Model model){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        List<String> rolesS = new ArrayList<>();
         String id = authentication.getName();
-        System.out.println("username=" + id);
+        for(GrantedAuthority authority : authorities) {
+            rolesS.add(authority.getAuthority());
+        }
+
+        model.addAttribute("rolessS",rolesS);
         return ("admin/Dashboard");
     }
 
     @GetMapping("/demande")
     public String demande(Model model){
-        List<Demande> demandes = demandeService.findDemandeNonSoumise();
+
         List<Role> roles = roleService.findAll();
         List<Poste> postes = posteService.findAll();
-        model.addAttribute("demandes",demandes);
+
         model.addAttribute("roles",roles);
         model.addAttribute("postes",postes);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String idUser = authentication.getName();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        List<String> rolesS = new ArrayList<>();
+        for (GrantedAuthority authority : authorities) {
+            rolesS.add(authority.getAuthority());
+        }
+
+        KeyClokResponseToken response = keyCloakClient.getToken();
+        UserResponse reponseUser = keyCloakClient.getUser(idUser,response.getAccess_token());
+        Fonctionnaire fonctionnaire = fonctionnaireService.findByEmail(reponseUser.getEmail());
+
+        List<Demande> demandes = demandeService.findDemandeNonSoumise(fonctionnaire.getEtablissement().getIdEtablissement());
+        model.addAttribute("demandes",demandes);
+
+        model.addAttribute("rolessS",rolesS);
+
         return ("admin/page/Demande");
     }
 
@@ -78,6 +110,7 @@ public class DemandeController {
             LocalDateTime now = LocalDateTime.now();
             java.util.Date dateValidationUtil = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
             java.sql.Date dateValidation = new java.sql.Date(dateValidationUtil.getTime());
+            Fonctionnaire fonctionnaire = fonctionnaireService.findByEmail(reponseUser.getEmail());
 
             DemandeAccorder demandeAccorder = new DemandeAccorder();
             demandeAccorder.setDemande(demande);
@@ -85,7 +118,7 @@ public class DemandeController {
             demandeAccorder.setUser(users);
             demandeAccorderService.insert(demandeAccorder);
 
-            fonctionnaireController.insertFonctionnaire(demande, roles, postes);
+            fonctionnaireController.insertFonctionnaire(demande, roles, postes, fonctionnaire.getEtablissement());
             redirectAttributes.addFlashAttribute("success", "La demande a été validée avec succès !");
         }
         return ("redirect:/dashboard/demande");
@@ -117,14 +150,38 @@ public class DemandeController {
 
     @GetMapping("/demande-accorder")
     public String demandeAccorder(Model model){
-        List<DemandeAccorder> demandes = demandeAccorderService.findAll();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String idUser = authentication.getName();
+        KeyClokResponseToken response = keyCloakClient.getToken();
+        UserResponse reponseUser = keyCloakClient.getUser(idUser,response.getAccess_token());
+        Fonctionnaire fonctionnaire = fonctionnaireService.findByEmail(reponseUser.getEmail());
+        List<DemandeAccorder> demandes = demandeAccorderService.findAllByEtablissement(fonctionnaire.getEtablissement().getIdEtablissement());
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        List<String> rolesS = new ArrayList<>();
+        for (GrantedAuthority authority : authorities) {
+            rolesS.add(authority.getAuthority());
+        }
+
+        model.addAttribute("rolessS",rolesS);
         model.addAttribute("demandes",demandes);
         return ("admin/page/DemandeAccorder");
     }
 
     @GetMapping("/demande-refuser")
     public String demandeRefuser(Model model){
-        List<DemandeRefuser> demandes = demandeRefuserService.findAll();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String idUser = authentication.getName();
+        KeyClokResponseToken response = keyCloakClient.getToken();
+        UserResponse reponseUser = keyCloakClient.getUser(idUser,response.getAccess_token());
+        Fonctionnaire fonctionnaire = fonctionnaireService.findByEmail(reponseUser.getEmail());
+        List<DemandeRefuser> demandes = demandeRefuserService.findAllByEtablissement(fonctionnaire.getEtablissement().getIdEtablissement());
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        List<String> rolesS = new ArrayList<>();
+        for (GrantedAuthority authority : authorities) {
+            rolesS.add(authority.getAuthority());
+        }
+
+        model.addAttribute("rolessS",rolesS);
         model.addAttribute("demandes",demandes);
         return ("admin/page/DemandeRefuser");
     }

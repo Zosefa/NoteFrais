@@ -1,5 +1,6 @@
 package com.example.projet.service;
 
+import com.example.projet.model.DemandeAccorder;
 import com.example.projet.model.DemandeRefuser;
 import com.example.projet.repository.DemandeRefuserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +23,10 @@ public class DemandeRefuserService {
 
     public DemandeRefuser findById(Integer id){
         return demandeRefuserRepository.findById(id).get();
+    }
+
+    public List<DemandeRefuser> findAllByEtablissement(Integer id)
+    {
+        return demandeRefuserRepository.findAllByEtablissement(id);
     }
 }

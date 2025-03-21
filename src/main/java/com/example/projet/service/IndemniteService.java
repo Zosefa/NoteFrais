@@ -21,4 +21,8 @@ public class IndemniteService {
     public Indemnite findById(Integer id){
         return indemniteRepository.findById(id).get();
     }
+
+    public List<Indemnite> findAllByEtablissement(Integer id){
+        return indemniteRepository.findAllByEtablissement(id);
+    }
 }

@@ -34,6 +34,8 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -62,13 +64,12 @@ public class DemandeClientController {
     @GetMapping()
     public String home(@AuthenticationPrincipal UserDetails userDetails, Model model, HttpServletRequest request){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            Set<String> roles = authentication.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toSet());
-
-            model.addAttribute("roles", roles);
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        List<String> rolesS = new ArrayList<>();
+        for(GrantedAuthority authority : authorities) {
+            rolesS.add(authority.getAuthority());
         }
+        model.addAttribute("rolessS",rolesS);
         String idUser = authentication.getName();
         KeyClokResponseToken response = keyCloakClient.getToken();
         UserResponse reponseUser = keyCloakClient.getUser(idUser,response.getAccess_token());
@@ -89,13 +90,12 @@ public class DemandeClientController {
     @GetMapping("/demande")
     public String demande(Model model, HttpServletRequest request){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            Set<String> roles = authentication.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toSet());
-
-            model.addAttribute("roles", roles);
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        List<String> rolesS = new ArrayList<>();
+        for(GrantedAuthority authority : authorities) {
+            rolesS.add(authority.getAuthority());
         }
+        model.addAttribute("rolessS",rolesS);
         String idUser = authentication.getName();
         KeyClokResponseToken response = keyCloakClient.getToken();
         UserResponse reponseUser = keyCloakClient.getUser(idUser,response.getAccess_token());
@@ -107,7 +107,7 @@ public class DemandeClientController {
             referer = "/client/demande";
         }
 
-        List<TypeMission> types = typeMissionService.findAll();
+        List<TypeMission> types = typeMissionService.findAllByEtablissement(fonctionnaire.getEtablissement().getIdEtablissement());
 
         model.addAttribute("notifications", notifications);
         model.addAttribute("total",total);

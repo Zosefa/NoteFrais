@@ -27,12 +27,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/client")
 public class ProfilClient {
     @Autowired
     private KeyCloakClient keyCloakClient;
@@ -58,13 +59,14 @@ public class ProfilClient {
         model.addAttribute("email",reponseUser.getEmail());
         model.addAttribute(profilDTO);
 
-        if (authentication != null) {
-            Set<String> roles = authentication.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toSet());
-
-            model.addAttribute("roles", roles);
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        List<String> rolesS = new ArrayList<>();
+        for(GrantedAuthority authority : authorities) {
+            rolesS.add(authority.getAuthority());
         }
+
+        model.addAttribute("rolessS",rolesS);
+
         Fonctionnaire fonctionnaire = fonctionnaireService.findByEmail(reponseUser.getEmail());
         List<Notification> notifications = notificationService.allNotification(fonctionnaire.getIdFonctionnaire());
         Integer total = notificationService.total(fonctionnaire.getIdFonctionnaire());
@@ -109,6 +111,6 @@ public class ProfilClient {
                 model.addAttribute("erreur","veuillez entrer votre mot de passe");
             }
         }
-        return "redirect:/client/profil";
+        return "redirect:/profil";
     }
 }

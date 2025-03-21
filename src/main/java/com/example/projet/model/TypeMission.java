@@ -13,6 +13,10 @@ public class TypeMission {
     @Column(name = "type_mission")
     private String TypeMission;
 
+    @ManyToOne
+    @JoinColumn(name = "id_etablissement")
+    private Etablissement etablissement;
+
     public Integer getIdTypeMission() {
         return idTypeMission;
     }
@@ -27,5 +31,13 @@ public class TypeMission {
 
     public void setTypeMission(String typeMission) {
         TypeMission = typeMission;
+    }
+
+    public Etablissement getEtablissement() {
+        return etablissement;
+    }
+
+    public void setEtablissement(Etablissement etablissement) {
+        this.etablissement = etablissement;
     }
 }
